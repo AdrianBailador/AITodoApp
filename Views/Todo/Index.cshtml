@@ -1,0 +1,39 @@
+﻿@model IEnumerable<AITodoApp.Models.TodoItem>
+
+@{
+    ViewData["Title"] = "Your Tasks";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-success">+ New Task (Manual)</a>
+    <a asp-action="Suggest" class="btn btn-info">✨ Suggest a Task (AI)</a>
+</p>
+
+@if (!Model.Any())
+{
+    <p>No tasks yet. Add one or get a suggestion!</p>
+}
+else
+{
+    <ul class="list-group">
+        @foreach (var item in Model)
+        {
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>@item.Title</strong> <br/>
+                    <small class="text-muted">
+                        Category: @item.Category | Priority: @item.Priority | Created: @item.DateCreated.ToShortDateString()
+                    </small>
+                </div>
+                <span>
+                    @* Add Edit/Delete/Details links here if needed *@
+                    @* <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> *@
+                </span>
+            </li>
+        }
+    </ul>
+}

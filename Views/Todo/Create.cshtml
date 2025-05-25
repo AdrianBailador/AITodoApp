@@ -1,0 +1,64 @@
+@model AITodoApp.Models.TodoItem
+
+@{
+    // Determine if it's a new item (from Suggest or direct Create link) or for editing (if you add editing later)
+    bool isNewSuggested = !string.IsNullOrEmpty(Model.Title) && Model.Id == 0;
+    ViewData["Title"] = isNewSuggested ? "Review Suggested Task" : "Create New Task";
+}
+
+<h2>@ViewData["Title"]</h2>
+<hr />
+<div class="row">
+    <div class="col-md-6"> @* Limit width for better form appearance *@
+        <form asp-action="Create" method="post">
+            @* asp-action="Create" ensures it POSTs to the Create action in TodoController *@
+            @* The form tag helper automatically includes the AntiForgeryToken *@
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @* If you support editing later, you'd add: <input type="hidden" asp-for="Id" /> *@
+
+            <div class="form-group mb-3"> @* Added form-group and mb-3 for spacing *@
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Category" class="control-label"></label>
+                <input asp-for="Category" class="form-control" />
+                <span asp-validation-for="Category" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Priority" class="control-label"></label>
+                @* Consider a select for Priority for consistency *@
+                <select asp-for="Priority" class="form-control">
+                    <option value="">-- Select Priority --</option>
+                    <option value="High" selected="@(Model.Priority == "Alta" || Model.Priority == "High")">High</option>
+                    <option value="Medium" selected="@(Model.Priority == "Media" || Model.Priority == "Medium")">Medium</option>
+                    <option value="Low" selected="@(Model.Priority == "Baja" || Model.Priority == "Low")">Low</option>
+                    @* Add other options or make them consistent with Gemini output *@
+                </select>
+                <span asp-validation-for="Priority" class="text-danger"></span>
+            </div>
+
+            @* If DateCreated is not meant to be user-editable, don't include it in the form.
+               It will be set by the controller as shown above.
+            <div class="form-group mb-3">
+                <label asp-for="DateCreated" class="control-label"></label>
+                <input asp-for="DateCreated" class="form-control" />
+                <span asp-validation-for="DateCreated" class="text-danger"></span>
+            </div>
+            *@
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Save Task</button>
+                <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
